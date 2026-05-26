@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Chanchal 🌸 ❤️</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap');
-
         body {
             margin: 0;
             padding: 0;
@@ -15,13 +13,12 @@
             align-items: center;
             height: 100vh;
             background-color: #ffe6e6;
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif; /* Normal simple font */
             overflow: hidden;
             text-align: center;
             touch-action: manipulation;
         }
 
-        /* Sunflowers and Hearts Animation */
         .falling-item {
             position: fixed;
             top: -50px;
@@ -36,28 +33,26 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             padding: 30px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 85%;
             position: relative;
             z-index: 1000;
-            border: 2px solid #ffb3c1;
         }
 
         .gif-container img {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             object-fit: contain;
             margin-bottom: 20px;
         }
 
         h1 {
             color: #ff4d6d;
-            font-family: 'Dancing Script', cursive;
-            font-size: 28px;
+            font-size: 22px;
             margin-bottom: 25px;
             line-height: 1.4;
         }
@@ -66,29 +61,27 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            height: 70px;
+            height: 60px;
             align-items: center;
         }
 
         button {
-            padding: 12px 28px;
+            padding: 12px 25px;
             font-size: 18px;
             font-weight: bold;
             border: none;
-            border-radius: 50px;
+            border-radius: 25px;
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
         #yesBtn {
             background-color: #ff4d6d;
             color: white;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
         }
 
         #noBtn {
-            background-color: #f0f0f0;
-            color: #666;
+            background-color: #ccc;
+            color: #333;
             position: relative;
         }
 
@@ -96,18 +89,16 @@
 
         .success-text {
             color: #d63384;
-            font-family: 'Dancing Script', cursive;
-            font-size: 24px;
+            font-size: 19px;
             font-weight: bold;
             margin: 20px 0;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         #nextBtn {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
+            background-color: #4CAF50;
             color: white;
-            margin-top: 15px;
-            width: 100%;
+            margin-top: 10px;
             animation: pulse 1.5s infinite;
         }
 
@@ -118,18 +109,18 @@
         }
     </style>
 </head>
-<body onclick="initAudio()" ontouchstart="initAudio()">
+<body onclick="startMusic()" ontouchstart="startMusic()">
 
-    <audio id="bgMusic" loop preload="auto">
-        <source src="https://dl.dropboxusercontent.com/scl/fi/v6t6i6v8a5p6s8r6n/Pal-Pal-Dil-Ke-Paas.mp3?rlkey=p6n7i5o4v3m2l1&st=direct&raw=1" type="audio/mpeg">
-    </audio>
+    <audio id="bgMusic" loop>
+        <source src="https://www.dropbox.com/scl/fi/v6t6i6v8a5p6s8r6n/Pal-Pal-Dil-Ke-Paas.mp3?rlkey=p6n7i5o4v3m2l1&raw=1" type="audio/mpeg">
+        </audio>
 
     <div class="container" id="mainContainer">
         <div class="gif-container" id="gifDisplay">
             <img src="https://media.tenor.com/j8S8Lc9X968AAAAi/mochi-mochi-peach-cat-peach-cat.gif" alt="Cute Bear">
         </div>
         
-        <h1 id="questionText">Will you be my Best wali Best Friend Chanchal? 🤭💖</h1>
+        <h1 id="questionText">Will you be my best wali Best Friend Chanchal? 🤭💖</h1>
 
         <div class="btn-group">
             <button id="yesBtn" onclick="showSuccess()">Yes</button>
@@ -138,91 +129,68 @@
     </div>
 
     <div class="container hidden" id="successContainer">
-        <img src="https://media.tenor.com/gU_pajBy_SIAAAAi/tkthao219-bubududu.gif" style="width:160px;">
+        <img src="https://media.tenor.com/gU_pajBy_SIAAAAi/tkthao219-bubududu.gif" style="width:150px;">
         <div class="success-text">
             Thank you Chanchal, you are the bestt 💗<br>
             & The most gorgeous Girl hehehe😁😍.
         </div>
-        <button id="nextBtn" onclick="goToVideo()">Next: Watch Surprise →</button>
+        <button id="nextBtn" onclick="goToVideo()">Next →</button>
     </div>
 
     <script>
         const audio = document.getElementById('bgMusic');
-        let audioStarted = false;
+        let playing = false;
 
-        // Function to start music on first touch
-        function initAudio() {
-            if (!audioStarted) {
-                audio.play().then(() => {
-                    audioStarted = true;
-                }).catch(e => console.log("Waiting for user interaction..."));
+        function startMusic() {
+            if (!playing) {
+                audio.play().then(() => { playing = true; }).catch(e => console.log("Click again to play"));
             }
         }
 
-        // Falling Elements (Hearts, Flowers, Balloons)
         function createFallingItem() {
-            const items = ['🌻', '❤️', '🪷', '🎈', '🌸'];
+            const items = ['🌻', '❤️', '🪷', '🎈','🌸',];
             const item = document.createElement('div');
             item.classList.add('falling-item');
             item.innerHTML = items[Math.floor(Math.random() * items.length)];
             item.style.left = Math.random() * 100 + 'vw';
-            item.style.fontSize = Math.random() * 25 + 15 + 'px';
-            item.style.animationDuration = Math.random() * 3 + 2 + 's';
-            item.style.opacity = Math.random() * 0.8 + 0.2;
-            
+            item.style.fontSize = Math.random() * 20 + 15 + 'px';
+            item.style.animationDuration = Math.random() * 2 + 3 + 's';
             document.body.appendChild(item);
-            setTimeout(() => { item.remove(); }, 5000);
+            setTimeout(() => item.remove(), 5000);
         }
-        setInterval(createFallingItem, 250);
+        setInterval(createFallingItem, 300);
 
         const messages = [
             "Please aisa mat karo... 🥺",
-            "Please man jao na yawrr Chanchal! 😭",
+            "Please man jao na yawrr Chanchal! 🥲",
             "Ye last bar puch rha hu, please yes kar do.. ✨",
-            "Kitni patthar dil ho yr Chanchal😞",
+            "Kitni pathhar dil ho yawr Chanchal😞? ",
             "Maan jaiye na! ❤️",
-            "Sunder ho to bhav khaogi kya 😩",
-            "Oye Sundriii Man ja yawrr Chanchal",
-            "Request hai yawrr abb yes kardo👉👈",
-        ];
-
-        const gifs = [
-            "https://media.tenor.com/X_v0S96Y89AAAAAi/sad-cry.gif",
-            "https://media.tenor.com/07706_X6_64AAAAAi/peach-goma.gif",
-            "https://media.tenor.com/T0_6InXvX8QAAAAi/mochi-peach.gif",
-            "https://media.tenor.com/6_m-r8p_7p8AAAAi/mochi-cat.gif"
+            "Abb to yes kar do yr👉👈",
+            "Sunder ho to bhavv khaogi 🤭",
+            "Oye Sundrii yes karde na 👉👈🪷",
+            "Please yes karde Flowers de dunga 🌹🌷",
         ];
 
         let msgIndex = 0;
 
         function handleNo() {
-            initAudio(); // Play music if not already playing
+            startMusic();
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            const questionText = document.getElementById('questionText');
-            const gifDisplay = document.querySelector('#gifDisplay img');
-
-            // Change Text and GIF
-            questionText.innerText = messages[msgIndex];
-            gifDisplay.src = gifs[msgIndex];
-
-            // Make Yes Button grow
+            document.getElementById('questionText').innerText = messages[msgIndex];
+            
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize + 3) + "px";
-            yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).padding) + 2) + "px";
+            yesBtn.style.fontSize = (currentSize + 2) + "px";
 
-            // Move No Button
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 50);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
             noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-
+            noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
             msgIndex = (msgIndex + 1) % messages.length;
         }
 
         function showSuccess() {
-            initAudio();
+            startMusic();
             document.getElementById('mainContainer').classList.add('hidden');
             document.getElementById('successContainer').classList.remove('hidden');
         }
