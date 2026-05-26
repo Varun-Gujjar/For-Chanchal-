@@ -13,20 +13,36 @@
             align-items: center;
             height: 100vh;
             background-color: #ffe6e6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
             text-align: center;
         }
 
+        /* Falling Animation CSS */
+        .falling-item {
+            position: fixed;
+            top: -50px;
+            z-index: 999;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 85%;
             position: relative;
-            transition: all 0.3s ease;
+            z-index: 1000;
         }
 
         .gif-container img {
@@ -38,21 +54,21 @@
 
         h1 {
             color: #ff4d6d;
-            font-size: 22px;
+            font-size: 20px;
             margin-bottom: 25px;
-            min-height: 60px;
+            line-height: 1.5;
         }
 
         .btn-group {
             display: flex;
             justify-content: center;
             gap: 15px;
-            position: relative;
-            height: 50px;
+            height: 60px;
+            align-items: center;
         }
 
         button {
-            padding: 10px 25px;
+            padding: 12px 25px;
             font-size: 18px;
             font-weight: bold;
             border: none;
@@ -65,48 +81,98 @@
             background-color: #ff4d6d;
             color: white;
             box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
-            z-index: 100;
         }
 
         #noBtn {
             background-color: #ccc;
             color: #333;
-            transition: 0.1s;
+        }
+
+        .hidden { display: none; }
+
+        .success-text {
+            color: #d63384;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        #nextBtn {
+            background-color: #4CAF50;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
-<body>
+<body onclick="playMusic()">
 
-    <div class="container">
+    <audio id="bgMusic" loop>
+        <source src="https://www.dropbox.com/scl/fi/v6t6i6v8a5p6s8r6n/Pal-Pal-Dil-Ke-Paas.mp3?rlkey=p6n7i5o4v3m2l1&raw=1" type="audio/mpeg">
+    </audio>
+
+    <div class="container" id="mainContainer">
         <div class="gif-container" id="gifDisplay">
             <img src="https://media.tenor.com/j8S8Lc9X968AAAAi/mochi-mochi-peach-cat-peach-cat.gif" alt="Cute Bear">
         </div>
         
-        <h1 id="questionText">Will you be my Best wali Best Frinds Chanchal? 😁💖</h1>
+        <h1 id="questionText">Will you be my best Wali Best friend Chanchal? 💖</h1>
 
-        <div class="btn-group">
-            <button id="yesBtn" onclick="acceptProposal()">Yes</button>
+        <div class="btn-group" id="buttonGroup">
+            <button id="yesBtn" onclick="showSuccess()">Yes</button>
             <button id="noBtn" onmouseover="handleNo()" onclick="handleNo()">No</button>
         </div>
     </div>
 
+    <div class="container hidden" id="successContainer">
+        <img src="https://media.tenor.com/gU_pajBy_SIAAAAi/tkthao219-bubududu.gif" style="width:150px;">
+        <div class="success-text">
+            Thank you Chanchal, you are the bestt 💗<br>
+            & The most gorgeous Girl in the world 😍.
+        </div>
+        <button id="nextBtn" onclick="goToVideo()">Next →</button>
+    </div>
+
     <script>
         const youtubeLink = "https://youtube.com/shorts/jESX2GS8408?si=lnFZezKEN-pZjr3p";
-        
+        let musicStarted = false;
+
+        function playMusic() {
+            if (!musicStarted) {
+                const music = document.getElementById('bgMusic');
+                music.play().catch(e => console.log("Audio play blocked"));
+                musicStarted = true;
+            }
+        }
+
+        // Falling Elements Logic
+        function createFallingItem() {
+            const items = ['🌻', '❤️', '💛', '🎈'];
+            const item = document.createElement('div');
+            item.classList.add('falling-item');
+            item.innerHTML = items[Math.floor(Math.random() * items.length)];
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.fontSize = Math.random() * (30 - 15) + 15 + 'px';
+            item.style.animationDuration = Math.random() * (5 - 3) + 3 + 's';
+            item.style.opacity = Math.random();
+            
+            document.body.appendChild(item);
+            setTimeout(() => { item.remove(); }, 5000);
+        }
+        setInterval(createFallingItem, 300);
+
         const messages = [
             "Please aisa mat karo... 🥺",
             "Please man jao na yawrr Chanchal! 😭",
             "Ye last bar puch rha hu, please yes kar do.. ✨",
-            "Maafi de do, par No mat bolo.. 🧸",
-            "Kitni Pathhar dil ho Chanchal? Maan jaiye na! ❤️"
-        ];
-
-        const gifs = [
-            "https://media.tenor.com/X_v0S96Y89AAAAAi/sad-cry.gif", // Crying
-            "https://media.tenor.com/07706_X6_64AAAAAi/peach-goma.gif", // Pleading
-            "https://media.tenor.com/T0_6InXvX8QAAAAi/mochi-peach.gif", // Super sad
-            "https://media.tenor.com/yU_v1Anu49AAAAAi/sad-mochi-cat.gif", // Heartbroken
-            "https://media.tenor.com/6_m-r8p_7p8AAAAi/mochi-cat.gif" // Pouting
+            "Kitni patthar dil ho yawr  Chanchal? ❤️",
+            "Sunder ho to itna bhav khaogi 😞",
+            "Kar lo yes abb to request hai 😩😩"
         ];
 
         let msgIndex = 0;
@@ -115,34 +181,29 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const questionText = document.getElementById('questionText');
-            const gifDisplay = document.getElementById('gifDisplay').querySelector('img');
-
-            // 1. Change Message
+            
             questionText.innerText = messages[msgIndex];
             
-            // 2. Change GIF
-            gifDisplay.src = gifs[msgIndex];
-
-            // 3. Make Yes Button bigger and No button move
             let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize + 2) + "px";
-            yesBtn.style.padding = (parseFloat(yesBtn.style.padding) + 2) + "px";
+            yesBtn.style.fontSize = (currentSize + 3) + "px";
 
-            // 4. Move No Button randomly
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 50);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            // Increase index for next message
             msgIndex = (msgIndex + 1) % messages.length;
         }
 
-        function acceptProposal() {
+        function showSuccess() {
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('successContainer').classList.remove('hidden');
+        }
+
+        function goToVideo() {
             window.location.href = youtubeLink;
         }
     </script>
-
 </body>
 </html>
